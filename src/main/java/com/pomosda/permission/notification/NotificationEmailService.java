@@ -1,68 +1,59 @@
 package com.pomosda.permission.notification;
 
-import com.pomosda.permission.user.User;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
-@Slf4j
+import java.util.List;
+import java.util.Map;
+
 @Service
-@RequiredArgsConstructor
 public class NotificationEmailService {
-    private final ObjectProvider<JavaMailSender> mailSenderProvider;
 
-    @Value("${app.notification.email.enabled:false}")
-    private boolean enabled;
+    @Value("${mailtrap.api.token}")
+    private String apiToken;
 
-    @Value("${app.notification.email.from:no-reply@sipesa.local}")
-    private String from;
+    @Value("${mailtrap.api.inbox-id}")
+    private String inboxId;
 
-    @Value("${app.notification.email.subject-prefix:[SIPESA]}")
+    // Membaca email pengirim dari application.yml
+    @Value("${app.notification.email.from}")
+    private String fromEmail;
+
+    // Membaca prefix subjek dari application.yml
+    @Value("${app.notification.email.subject-prefix}")
     private String subjectPrefix;
 
-    public NotificationDeliveryResult sendNotification(User recipient, String title, String message) {
-        if (recipient == null || recipient.getEmail() == null || recipient.getEmail().isBlank()) {
-            return NotificationDeliveryResult.noEmail();
-        }
-        if (!enabled) {
-            log.info("Email notification disabled. Pesan untuk {}: {} - {}", recipient.getEmail(), title, message);
-            return NotificationDeliveryResult.disabled("Email");
-        }
+    private final RestTemplate restTemplate = new RestTemplate();
 
-        JavaMailSender mailSender = mailSenderProvider.getIfAvailable();
-        if (mailSender == null) {
-            log.warn("Email notification is enabled, but JavaMailSender is not configured. Skipping email to {}.", recipient.getEmail());
-            return NotificationDeliveryResult.failed("JavaMailSender belum dikonfigurasi");
-        }
+    public void sendEmail(String to, String subject, String body) {
+        String url = "https://sandbox.api.mailtrap.io/api/send/" + inboxId;
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Api-Token", apiToken);
+
+        // Menggabungkan prefix dengan subjek yang dikirim
+        String finalSubject = subjectPrefix + subject;
+
+        Map<String, Object> requestBody = Map.of(
+                "from", Map.of("email", fromEmail, "name", "Sistem SIPESA"),
+                "to", List.of(Map.of("email", to)),
+                "subject", finalSubject,
+                "text", body // Gunakan "html" alih-alih "text" jika konten pesanmu berupa HTML
+        );
+
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(requestBody, headers);
 
         try {
-            SimpleMailMessage mail = new SimpleMailMessage();
-            mail.setFrom(from);
-            mail.setTo(recipient.getEmail());
-            mail.setSubject(subjectPrefix + " " + title);
-            mail.setText(message);
-            mailSender.send(mail);
-            return NotificationDeliveryResult.sent();
-        } catch (RuntimeException exception) {
-            log.warn("Failed to send notification email to {}: {}", recipient.getEmail(), exception.getMessage());
-            return NotificationDeliveryResult.failed(exception.getMessage());
+            ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
+            System.out.println("Email berhasil dikirim via Mailtrap API. Status: " + response.getStatusCode());
+        } catch (Exception e) {
+            System.err.println("Gagal mengirim email via API: " + e.getMessage());
         }
-    }
-
-    public NotificationDeliveryResult sendOtp(User recipient, String code) {
-        return sendNotification(recipient, "Reset Password", """
-                SIPESA SMP POMOSDA
-                Reset Password
-
-                Kode OTP Anda: %s
-
-                Kode ini berlaku selama beberapa menit. Jangan berikan kode ini kepada siapa pun.
-
-                Abaikan email ini jika Anda tidak meminta reset password.
-                """.formatted(code));
     }
 }
