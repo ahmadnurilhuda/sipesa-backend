@@ -39,7 +39,7 @@ app:
   notification:
     channel: ${NOTIFICATION_CHANNEL:EMAIL}
     email:
-      enabled: ${MAIL_ENABLED:false}
+      enabled: ${MAIL_ENABLED:true}
       from: ${MAIL_FROM:no-reply@sipesa.local}
       subject-prefix: "${MAIL_SUBJECT_PREFIX:[SIPESA] }"
   whatsapp:
