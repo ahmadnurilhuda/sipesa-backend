@@ -71,10 +71,27 @@ public class NotificationEmailService {
     }
 
     // 2. Tambahkan kembali method sendNotification
-    public void sendNotification(User user, String subject, String message) {
+    public NotificationDeliveryResult sendNotification(User user, String subject, String message) {
         String to = user.getEmail();
+        try {
+            // Panggil fungsi utama yang sudah pakai Mailtrap API
+            this.sendEmail(to, subject, message);
 
-        // Panggil fungsi sendEmail yang sudah pakai Mailtrap API
-        this.sendEmail(to, subject, message);
+            // Kembalikan objek result dengan status sukses
+            // CATATAN: Sesuaikan cara pembuatan objek ini dengan struktur class NotificationDeliveryResult aslimu
+            return new NotificationDeliveryResult(
+                    NotificationDeliveryStatus.SENT,
+                    "Pesan berhasil dikirim ke Mailtrap"
+            );
+
+        } catch (Exception e) {
+
+            // Kembalikan objek result dengan status gagal jika terjadi error
+            return new NotificationDeliveryResult(
+                    NotificationDeliveryStatus.FAILED,
+                    "Gagal mengirim pesan: " + e.getMessage()
+            );
+
+        }
     }
 }
