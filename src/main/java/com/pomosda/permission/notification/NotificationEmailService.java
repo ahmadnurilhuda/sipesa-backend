@@ -1,5 +1,6 @@
 package com.pomosda.permission.notification;
 
+import com.pomosda.permission.user.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -55,5 +56,25 @@ public class NotificationEmailService {
         } catch (Exception e) {
             System.err.println("Gagal mengirim email via API: " + e.getMessage());
         }
+    }
+
+    public void sendOtp(User user, String otp) {
+        // Catatan: Jika sebelumnya kamu memiliki template HTML khusus,
+        // kamu bisa mengembalikannya dari Git history kamu.
+        // Ini adalah contoh implementasi standarnya:
+        String to = user.getEmail();
+        String subject = "Kode OTP Reset Password";
+        String body = "Halo,\n\nBerikut adalah kode OTP untuk mereset password Anda: " + otp + "\n\nKode ini bersifat rahasia.";
+
+        // Panggil fungsi sendEmail yang sudah pakai Mailtrap API
+        this.sendEmail(to, subject, body);
+    }
+
+    // 2. Tambahkan kembali method sendNotification
+    public void sendNotification(User user, String subject, String message) {
+        String to = user.getEmail();
+
+        // Panggil fungsi sendEmail yang sudah pakai Mailtrap API
+        this.sendEmail(to, subject, message);
     }
 }
