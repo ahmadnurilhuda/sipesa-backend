@@ -5,19 +5,23 @@ spring:
     url: ${SPRING_DATASOURCE_URL}
     username: ${SPRING_DATASOURCE_USERNAME}
     password: ${SPRING_DATASOURCE_PASSWORD}
-  mail:
-    host: ${MAIL_HOST:localhost}
-    port: ${MAIL_PORT:587}
-    username: ${MAIL_USERNAME:}
-    password: ${MAIL_PASSWORD:}
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
-          ssl:
-            enable: false
+mailtrap:
+  api:
+    token: ${MAILTRAP_API_TOKEN}
+    inbox-id: ${MAILTRAP_INBOX_ID}
+#  mail:
+#    host: ${MAIL_HOST:localhost}
+#    port: ${MAIL_PORT:587}
+#    username: ${MAIL_USERNAME:}
+#    password: ${MAIL_PASSWORD:}
+#    properties:
+#      mail:
+#        smtp:
+#          auth: true
+#          starttls:
+#            enable: true
+#          ssl:
+#            enable: false
   jpa:
     hibernate:
       ddl-auto: validate
