@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Izin Menunggu Persetujuan</title>
+  <style>
+    body { 
+      font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      color: #2c3e50;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 650px;
+      margin: 0 auto;
+      background: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+    .header {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      color: #fff;
+      padding: 30px 24px;
+      text-align: center;
+    }
+    .brand {
+      font-weight: 700;
+      font-size: 20px;
+      margin-bottom: 8px;
+    }
+    .status-badge {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.3);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+    .content {
+      padding: 32px 24px;
+    }
+    .greeting {
+      font-size: 16px;
+      margin-bottom: 20px;
+      color: #2c3e50;
+    }
+    .alert-info {
+      background: #fce4ec;
+      border-left: 4px solid #f5576c;
+      padding: 16px;
+      margin: 20px 0;
+      border-radius: 4px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .alert-info strong {
+      color: #c2185b;
+    }
+    .details-section {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      border: 1px solid #e0e0e0;
+    }
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px dotted #d0d0d0;
+      font-size: 14px;
+    }
+    .detail-row:last-child {
+      border-bottom: none;
+    }
+    .detail-label {
+      font-weight: 600;
+      color: #555;
+      width: 45%;
+    }
+    .detail-value {
+      color: #2c3e50;
+      text-align: right;
+      word-break: break-word;
+      width: 55%;
+    }
+    .approval-stage {
+      background: linear-gradient(135deg, #fff5e1 0%, #ffe0b2 100%);
+      border: 2px solid #ffb74d;
+      padding: 16px;
+      margin: 20px 0;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+    .approval-stage strong {
+      color: #e65100;
+      display: block;
+      margin-bottom: 8px;
+    }
+    .note-section {
+      background: #f5f5f5;
+      padding: 12px;
+      border-radius: 6px;
+      margin-top: 8px;
+      font-size: 13px;
+      color: #666;
+      font-style: italic;
+      border-left: 3px solid #ffb74d;
+    }
+    .button {
+      display: inline-block;
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+      margin-top: 12px;
+      font-size: 14px;
+    }
+    .footer {
+      padding: 20px 24px;
+      background: #f8f9fa;
+      color: #666;
+      font-size: 12px;
+      text-align: center;
+      border-top: 1px solid #e0e0e0;
+    }
+    .footer-divider {
+      color: #999;
+      margin: 0 6px;
+    }
+    .timestamp {
+      color: #999;
+      font-size: 12px;
+      margin-top: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="brand">SIPESA</div>
+      <div class="status-badge">⏳ Sedang Ditinjau</div>
+    </div>
+    
+    <div class="content">
+      <div class="greeting">Halo {{studentName}},</div>
+      
+      <div class="alert-info">
+        <strong>✓ Izin Anda Sedang Dalam Proses</strong><br>
+        Pengajuan izin Anda telah diterima oleh {{approverName}} dan sedang dalam tahap persetujuan.
+      </div>
+
+      <div class="details-section">
+        <div style="margin-bottom: 16px; font-weight: 600; color: #2c3e50; font-size: 15px;">📌 Detail Pengajuan</div>
+        
+        <div class="detail-row">
+          <div class="detail-label">Tipe Izin:</div>
+          <div class="detail-value">{{permissionType}}</div>
+        </div>
+        
+        <div class="detail-row">
+          <div class="detail-label">Alasan:</div>
+          <div class="detail-value">{{reason}}</div>
+        </div>
+        
+        <div class="detail-row">
+          <div class="detail-label">Tujuan:</div>
+          <div class="detail-value">{{destination}}</div>
+        </div>
+        
+        <div class="detail-row">
+          <div class="detail-label">Tanggal Mulai:</div>
+          <div class="detail-value">{{startDate}}</div>
+        </div>
+        
+        <div class="detail-row">
+          <div class="detail-label">Tanggal Kembali:</div>
+          <div class="detail-value">{{expectedReturnDate}}</div>
+        </div>
+        
+        <div class="detail-row">
+          <div class="detail-label">Durasi:</div>
+          <div class="detail-value">{{durationDays}} hari</div>
+        </div>
+      </div>
+
+      <div class="approval-stage">
+        <strong>👤 Tahap Persetujuan Saat Ini</strong>
+        <div style="margin-bottom: 12px;">
+          <div style="display: flex; align-items: center;">
+            <div style="background: #ffb74d; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; margin-right: 12px; font-size: 14px;">→</div>
+            <div>
+              <div style="font-weight: 600;">{{currentApprovalStage}}</div>
+              <div style="font-size: 12px; color: #666; margin-top: 2px;">{{currentApprovalStageDesc}}</div>
+            </div>
+          </div>
+        </div>
+        {{#note}}
+        <div class="note-section">
+          💬 <strong>Catatan:</strong> {{note}}
+        </div>
+        {{/note}}
+      </div>
+
+      <div style="background: #f0f8ff; padding: 16px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #2196f3; font-size: 13px; line-height: 1.7; color: #555;">
+        <strong style="color: #1565c0;">📋 Urutan Persetujuan Lengkap:</strong><br><br>
+        <div style="margin-left: 16px;">
+          <div>{{#pendingWaliKelas}}✅{{/pendingWaliKelas}}{{^pendingWaliKelas}}{{#pastWaliKelas}}✓{{/pastWaliKelas}}{{^pastWaliKelas}}1{{/pastWaliKelas}}{{/pendingWaliKelas}} <strong>Wali Kelas</strong> - {{waliKelasDesc}}</div>
+          <div style="margin-top: 8px;">{{#pendingWaliKamar}}→{{/pendingWaliKamar}}{{#pastWaliKamar}}✓{{/pastWaliKamar}}{{^pendingWaliKamar}}{{^pastWaliKamar}}2{{/pastWaliKamar}}{{/pendingWaliKamar}} <strong>Wali Kamar</strong> - {{waliKamarDesc}}</div>
+          <div style="margin-top: 8px;">{{#completed}}✓{{/completed}}{{^completed}}3{{/completed}} <strong>Selesai</strong> - {{completedDesc}}</div>
+        </div>
+      </div>
+
+      <p style="font-size: 14px; line-height: 1.6; color: #666; margin-top: 20px;">
+        Anda akan menerima notifikasi ketika ada perkembangan status. Silakan cek aplikasi SIPESA secara berkala untuk memantau progress izin Anda.
+      </p>
+
+      <p style="text-align: center; margin-top: 24px;">
+        <a href="{{appUrl}}/permissions/{{permissionId}}" class="button">Lihat Status Terkini</a>
+      </p>
+
+      <p style="font-size: 13px; text-align: center; color: #999; margin-top: 20px;">
+        Jangan membalas email ini. Email ini adalah notifikasi otomatis dari sistem SIPESA.
+      </p>
+    </div>
+
+    <div class="footer">
+      <div>SIPESA • SMP POMOSDA</div>
+      <div class="footer-divider">•</div>
+      <div>Sistem Informasi Perizinan</div>
+      <div class="timestamp">Dikirim pada: {{sentAt}}</div>
+    </div>
+  </div>
+</body>
+</html>
