@@ -202,14 +202,25 @@ public class NotificationEmailService {
         placeholders.put("currentApprovalStage", getCurrentApprovalStage(permission.getStatus()));
         placeholders.put("currentApprovalStageDesc", getApprovalStageDescription(permission.getStatus()));
         
-        // Info penolakan
+        // Info penolakan dan catatan
         placeholders.put("rejectionReason", rejectionReason == null ? "" : rejectionReason);
+        placeholders.put("note", rejectionReason == null ? "" : rejectionReason);
         placeholders.put("rejectedBy", approverName == null ? "Wali Sekolah" : approverName);
+        
+        // Deskripsi tahap persetujuan (untuk template urutan persetujuan)
+        placeholders.put("waliKelasDesc", "Tahap pertama - Persetujuan dari Wali Kelas");
+        placeholders.put("waliKamarDesc", "Tahap kedua - Persetujuan dari Wali Kamar");
+        placeholders.put("completedDesc", "Izin selesai setelah check-in kembali");
         
         // Waktu selesai
         if (permission.getCompletedAt() != null) {
             placeholders.put("completedAt", formatInstant(permission.getCompletedAt(), "dd MMMM yyyy HH:mm"));
+        } else {
+            placeholders.put("completedAt", "");
         }
+        
+        // Permission ID
+        placeholders.put("permissionId", permission.getId().toString());
         
         // App URL
         placeholders.put("appUrl", appUrl);
@@ -264,6 +275,8 @@ public class NotificationEmailService {
                 String value = e.getValue() == null ? "" : e.getValue();
                 tpl = tpl.replace(key, value);
             }
+            // Remove any unreplaced placeholders to avoid showing raw template syntax
+            tpl = tpl.replaceAll("\\{\\{[^}]*\\}\\}", "");
             return tpl;
         } catch (IOException ex) {
             // fallback ke versi plain text jika template tidak ditemukan
