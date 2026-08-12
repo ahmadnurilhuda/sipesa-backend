@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>OTP Reset Password</title>
+  <style>
+    body { font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; background:#f4f6f8; color:#333; margin:0; padding:20px; }
+    .container { max-width:600px; margin:24px auto; background:#ffffff; border-radius:8px; box-shadow:0 1px 3px rgba(16,24,40,0.05); overflow:hidden; }
+    .header { background:#0f172a; color:#fff; padding:20px 24px; }
+    .brand { font-weight:700; font-size:18px; }
+    .content { padding:24px; }
+    .otp { display:inline-block; font-size:28px; letter-spacing:3px; background:#0f172a; color:#fff; padding:12px 18px; border-radius:6px; margin:12px 0; }
+    .note { color:#6b7280; font-size:14px; }
+    .footer { padding:16px 24px; background:#f8fafc; color:#6b7280; font-size:13px; }
+    a.button { display:inline-block; background:#2563eb; color:#fff; padding:10px 16px; border-radius:6px; text-decoration:none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="brand">SIPESA – SMP POMOSDA</div>
+    </div>
+    <div class="content">
+      <p>Halo {{name}},</p>
+      <p>Kami menerima permintaan untuk mereset kata sandi akun Anda. Gunakan kode OTP berikut untuk menyelesaikan proses reset:</p>
+      <div class="otp">{{otp}}</div>
+      <p class="note">Kode ini berlaku selama {{expiry}} menit. Jangan bagikan kode ini kepada siapapun.</p>
+      <p>Jika Anda tidak meminta reset kata sandi, abaikan email ini atau hubungi admin.</p>
+    </div>
+    <div class="footer">
+      <div>SIPESA • SMP POMOSDA</div>
+    </div>
+  </div>
+</body>
+</html>
