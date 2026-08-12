@@ -201,19 +201,17 @@
             </div>
           </div>
         </div>
-        {{#note}}
         <div class="note-section">
           💬 <strong>Catatan:</strong> {{note}}
         </div>
-        {{/note}}
       </div>
 
       <div style="background: #f0f8ff; padding: 16px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #2196f3; font-size: 13px; line-height: 1.7; color: #555;">
         <strong style="color: #1565c0;">📋 Urutan Persetujuan Lengkap:</strong><br><br>
         <div style="margin-left: 16px;">
-          <div>{{#pendingWaliKelas}}✅{{/pendingWaliKelas}}{{^pendingWaliKelas}}{{#pastWaliKelas}}✓{{/pastWaliKelas}}{{^pastWaliKelas}}1{{/pastWaliKelas}}{{/pendingWaliKelas}} <strong>Wali Kelas</strong> - {{waliKelasDesc}}</div>
-          <div style="margin-top: 8px;">{{#pendingWaliKamar}}→{{/pendingWaliKamar}}{{#pastWaliKamar}}✓{{/pastWaliKamar}}{{^pendingWaliKamar}}{{^pastWaliKamar}}2{{/pastWaliKamar}}{{/pendingWaliKamar}} <strong>Wali Kamar</strong> - {{waliKamarDesc}}</div>
-          <div style="margin-top: 8px;">{{#completed}}✓{{/completed}}{{^completed}}3{{/completed}} <strong>Selesai</strong> - {{completedDesc}}</div>
+          <div>✓ <strong>Wali Kelas</strong> - {{waliKelasDesc}}</div>
+          <div style="margin-top: 8px;">→ <strong>Wali Kamar</strong> (Tahap saat ini) - {{waliKamarDesc}}</div>
+          <div style="margin-top: 8px;">⧗ <strong>Selesai</strong> - {{completedDesc}}</div>
         </div>
       </div>
 
