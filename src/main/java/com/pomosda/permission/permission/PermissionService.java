@@ -98,11 +98,11 @@ public class PermissionService {
         permission.setSemester(semester);
         permission.setStatus(PermissionStatus.PENDING_WALI_KELAS);
         PermissionRequest saved = repository.save(permission);
-        notificationService.create(
-                activeClassGuardianUser(student.getSchoolClass()),
-                "Pengajuan Izin Baru",
-                permissionMessage(saved, "Tahap saat ini: menunggu persetujuan Wali Kelas.", "Mohon periksa dan berikan keputusan melalui aplikasi SIPESA.", null)
-        );
+        
+        // Kirim notifikasi ke Wali Kelas dengan template informatif
+        User classGuardian = activeClassGuardianUser(student.getSchoolClass());
+        notificationService.sendPermissionNotification(classGuardian, saved, classGuardian != null ? classGuardian.getName() : null, null);
+        
         return PermissionDto.from(saved);
     }
 
@@ -155,11 +155,11 @@ public class PermissionService {
     @Transactional
     public PermissionDto approveWaliKelas(UUID id, DecisionRequest request, Authentication authentication) {
         PermissionRequest permission = transition(id, PermissionStatus.PENDING_WALI_KELAS, PermissionStatus.PENDING_WALI_KAMAR, request.note(), authentication, ApprovalScope.CLASS);
-        notificationService.create(
-                activeRoomGuardianUser(permission.getStudent().getRoom()),
-                "Izin Menunggu Wali Kamar",
-                permissionMessage(permission, "Wali Kelas telah menyetujui pengajuan izin.", "Tahap berikutnya: menunggu keputusan Wali Kamar.", request.note())
-        );
+        
+        // Kirim notifikasi ke Wali Kamar dengan template informatif
+        User roomGuardian = activeRoomGuardianUser(permission.getStudent().getRoom());
+        notificationService.sendPermissionNotification(roomGuardian, permission, roomGuardian != null ? roomGuardian.getName() : null, null);
+        
         return PermissionDto.from(permission);
     }
 
@@ -167,11 +167,11 @@ public class PermissionService {
     public PermissionDto rejectWaliKelas(UUID id, DecisionRequest request, Authentication authentication) {
         requireDecisionNote(request.note(), "Alasan penolakan wajib diisi");
         PermissionRequest permission = transition(id, PermissionStatus.PENDING_WALI_KELAS, PermissionStatus.REJECTED_BY_WALI_KELAS, request.note(), authentication, ApprovalScope.CLASS);
-        notificationService.create(
-                permission.getRequestedBy(),
-                "Izin Ditolak Wali Kelas",
-                permissionMessage(permission, "Pengajuan izin ditolak oleh Wali Kelas.", "Silakan lihat detail izin di aplikasi SIPESA.", request.note())
-        );
+        
+        // Kirim notifikasi ke siswa dengan template penolakan informatif
+        User actor = currentUser.get(authentication);
+        notificationService.sendPermissionNotification(permission.getRequestedBy(), permission, actor != null ? actor.getName() : "Wali Kelas", request.note());
+        
         return PermissionDto.from(permission);
     }
 
@@ -179,11 +179,11 @@ public class PermissionService {
     public PermissionDto approveWaliKamar(UUID id, DecisionRequest request, Authentication authentication) {
         PermissionRequest permission = transition(id, PermissionStatus.PENDING_WALI_KAMAR, PermissionStatus.APPROVED, request.note(), authentication, ApprovalScope.ROOM);
         createToken(permission);
-        notificationService.create(
-                permission.getRequestedBy(),
-                "Izin Disetujui",
-                permissionMessage(permission, "Pengajuan izin sudah disetujui Wali Kamar.", "QR Code e-ticket sudah tersedia di aplikasi SIPESA dan hanya dapat digunakan sesuai jadwal izin.", request.note())
-        );
+        
+        // Kirim notifikasi ke siswa dengan template persetujuan informatif
+        User actor = currentUser.get(authentication);
+        notificationService.sendPermissionNotification(permission.getRequestedBy(), permission, actor != null ? actor.getName() : "Wali Kamar", null);
+        
         return PermissionDto.from(permission);
     }
 
@@ -191,11 +191,11 @@ public class PermissionService {
     public PermissionDto rejectWaliKamar(UUID id, DecisionRequest request, Authentication authentication) {
         requireDecisionNote(request.note(), "Alasan penolakan wajib diisi");
         PermissionRequest permission = transition(id, PermissionStatus.PENDING_WALI_KAMAR, PermissionStatus.REJECTED_BY_WALI_KAMAR, request.note(), authentication, ApprovalScope.ROOM);
-        notificationService.create(
-                permission.getRequestedBy(),
-                "Izin Ditolak Wali Kamar",
-                permissionMessage(permission, "Pengajuan izin ditolak oleh Wali Kamar.", "Silakan lihat detail izin di aplikasi SIPESA.", request.note())
-        );
+        
+        // Kirim notifikasi ke siswa dengan template penolakan informatif
+        User actor = currentUser.get(authentication);
+        notificationService.sendPermissionNotification(permission.getRequestedBy(), permission, actor != null ? actor.getName() : "Wali Kamar", request.note());
+        
         return PermissionDto.from(permission);
     }
 
@@ -204,12 +204,11 @@ public class PermissionService {
         PermissionRequest permission = transition(id, PermissionStatus.CHECKED_IN, PermissionStatus.COMPLETED, request.note(), authentication, ApprovalScope.ROOM);
         permission.setCompletedAt(Instant.now());
         tokenRepository.findByPermissionRequest(permission).ifPresent(token -> token.setActive(false));
-        notificationService.create(
-                permission.getRequestedBy(),
-                "Izin Selesai",
-                permissionMessage(permission, "Izin santri telah selesai dan sudah dikonfirmasi oleh Wali Kamar.",
-                        "Waktu selesai: " + formatInstant(permission.getCompletedAt()) + ". Terima kasih sudah mengikuti alur perizinan SIPESA.", request.note())
-        );
+        
+        // Kirim notifikasi ke siswa dengan template penyelesaian informatif
+        User actor = currentUser.get(authentication);
+        notificationService.sendPermissionNotification(permission.getRequestedBy(), permission, actor != null ? actor.getName() : "Wali Kamar", null);
+        
         return PermissionDto.from(permission);
     }
 

@@ -2,6 +2,7 @@ package com.pomosda.permission.notification;
 
 import com.pomosda.permission.common.CurrentUser;
 import com.pomosda.permission.exception.ApiException;
+import com.pomosda.permission.permission.PermissionRequest;
 import com.pomosda.permission.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,6 +43,61 @@ public class NotificationService {
         if (result.status() == NotificationDeliveryStatus.SENT) {
             notification.setSentAt(Instant.now());
         }
+    }
+
+    /**
+     * Mengirim notifikasi izin dengan template khusus yang lebih informatif
+     */
+    @Transactional
+    public void sendPermissionNotification(User user, PermissionRequest permission, String approverName, String rejectionReason) {
+        if (user == null) {
+            return;
+        }
+
+        // Buat record notifikasi umum
+        String title = getPermissionNotificationTitle(permission);
+        String message = buildPermissionNotificationMessage(permission, approverName, rejectionReason);
+
+        Notification notification = new Notification();
+        notification.setUser(user);
+        notification.setTitle(title);
+        notification.setMessage(message);
+        notification.setChannel("EMAIL");
+        repository.save(notification);
+
+        // Kirim email dengan template khusus
+        NotificationDeliveryResult result = notificationEmailService.sendPermissionEmail(user, permission, approverName, rejectionReason);
+        notification.setDeliveryStatus(result.status());
+        notification.setDeliveryError(result.error());
+        if (result.status() == NotificationDeliveryStatus.SENT) {
+            notification.setSentAt(Instant.now());
+        }
+    }
+
+    private String getPermissionNotificationTitle(PermissionRequest permission) {
+        return switch (permission.getStatus()) {
+            case PENDING_WALI_KELAS -> "Pengajuan Izin Baru Diterima";
+            case PENDING_WALI_KAMAR -> "Izin Menunggu Persetujuan Wali Kamar";
+            case APPROVED -> "🎉 Izin Anda Telah Disetujui";
+            case REJECTED_BY_WALI_KELAS -> "Izin Ditolak oleh Wali Kelas";
+            case REJECTED_BY_WALI_KAMAR -> "Izin Ditolak oleh Wali Kamar";
+            case COMPLETED -> "✅ Izin Telah Selesai";
+            default -> "Notifikasi Izin";
+        };
+    }
+
+    private String buildPermissionNotificationMessage(PermissionRequest permission, String approverName, String rejectionReason) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Izin ").append(permission.getPermissionType()).append("\n");
+        builder.append("Santri: ").append(permission.getStudent().getName()).append("\n");
+        builder.append("Status: ").append(permission.getStatus()).append("\n");
+        if (approverName != null) {
+            builder.append("Diproses oleh: ").append(approverName).append("\n");
+        }
+        if (rejectionReason != null && !rejectionReason.isBlank()) {
+            builder.append("Alasan: ").append(rejectionReason);
+        }
+        return builder.toString();
     }
 
     private NotificationDeliveryResult send(User user, String title, String message) {

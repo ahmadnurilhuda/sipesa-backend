@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Izin Disetujui</title>
+  <style>
+    body { 
+      font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      color: #2c3e50;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 650px;
+      margin: 0 auto;
+      background: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+    .header {
+      background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
+      color: #fff;
+      padding: 30px 24px;
+      text-align: center;
+    }
+    .brand {
+      font-weight: 700;
+      font-size: 20px;
+      margin-bottom: 8px;
+    }
+    .status-badge {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.3);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+    .content {
+      padding: 32px 24px;
+    }
+    .greeting {
+      font-size: 16px;
+      margin-bottom: 20px;
+      color: #2c3e50;
+    }
+    .success-banner {
+      background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+      border-left: 4px solid #28a745;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 4px;
+      font-size: 15px;
+      line-height: 1.6;
+      text-align: center;
+    }
+    .success-banner strong {
+      color: #155724;
+      display: block;
+      font-size: 16px;
+      margin-bottom: 8px;
+    }
+    .details-section {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      border: 1px solid #e0e0e0;
+    }
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px dotted #d0d0d0;
+      font-size: 14px;
+    }
+    .detail-row:last-child {
+      border-bottom: none;
+    }
+    .detail-label {
+      font-weight: 600;
+      color: #555;
+      width: 45%;
+    }
+    .detail-value {
+      color: #2c3e50;
+      text-align: right;
+      word-break: break-word;
+      width: 55%;
+    }
+    .qr-section {
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f7ff 100%);
+      border: 2px dashed #2196f3;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .qr-section strong {
+      color: #1565c0;
+      display: block;
+      margin-bottom: 12px;
+      font-size: 15px;
+    }
+    .qr-placeholder {
+      background: #fff;
+      padding: 20px;
+      border-radius: 6px;
+      display: inline-block;
+      margin: 12px 0;
+    }
+    .qr-placeholder-text {
+      font-size: 13px;
+      color: #666;
+      margin-top: 12px;
+    }
+    .important-notes {
+      background: #fff3e0;
+      border-left: 4px solid #ff9800;
+      padding: 16px;
+      margin: 20px 0;
+      border-radius: 4px;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+    .important-notes strong {
+      color: #e65100;
+      display: block;
+      margin-bottom: 8px;
+    }
+    .note-item {
+      margin-top: 8px;
+      padding-left: 16px;
+      position: relative;
+    }
+    .note-item:before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: #ff9800;
+      font-weight: bold;
+    }
+    .button {
+      display: inline-block;
+      background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+      margin-top: 12px;
+      font-size: 14px;
+    }
+    .timeline {
+      margin: 20px 0;
+      font-size: 13px;
+    }
+    .timeline-item {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 12px;
+      padding-left: 30px;
+      position: relative;
+    }
+    .timeline-item:before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      background: #28a745;
+      color: white;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 12px;
+    }
+    .timeline-label {
+      font-weight: 600;
+      color: #2c3e50;
+    }
+    .timeline-desc {
+      color: #666;
+      font-size: 12px;
+      margin-top: 2px;
+    }
+    .footer {
+      padding: 20px 24px;
+      background: #f8f9fa;
+      color: #666;
+      font-size: 12px;
+      text-align: center;
+      border-top: 1px solid #e0e0e0;
+    }
+    .footer-divider {
+      color: #999;
+      margin: 0 6px;
+    }
+    .timestamp {
+      color: #999;
+      font-size: 12px;
+      margin-top: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="brand">SIPESA</div>
+      <div class="status-badge">✅ DISETUJUI</div>
+    </div>
+    
+    <div class="content">
+      <div class="greeting">Halo {{studentName}},</div>
+      
+      <div class="success-banner">
+        <strong>🎉 Selamat! Izin Anda Telah Disetujui</strong>
+        Pengajuan izin Anda telah mendapatkan persetujuan dari kedua Wali Kelas dan Wali Kamar. Anda sekarang dapat melakukan perjalanan sesuai dengan jadwal yang telah disetujui.
+      </div>
+
+      <div class="details-section">
+        <div style="margin-bottom: 16px; font-weight: 600; color: #2c3e50; font-size: 15px;">📌 Detail Izin</div>
+        
+        <div class="detail-row">
+          <div class="detail-label">Tipe Izin:</div>
+          <div class="detail-value">{{permissionType}}</div>
+        </div>
+        
+        <div class="detail-row">
+          <div class="detail-label">Alasan:</div>
+          <div class="detail-value">{{reason}}</div>
+        </div>
+        
+        <div class="detail-row">
+          <div class="detail-label">Tujuan:</div>
+          <div class="detail-value">{{destination}}</div>
+        </div>
+        
+        <div class="detail-row">
+          <div class="detail-label">Tanggal Mulai:</div>
+          <div class="detail-value">{{startDate}} {{startTime}}</div>
+        </div>
+        
+        <div class="detail-row">
+          <div class="detail-label">Tanggal Kembali:</div>
+          <div class="detail-value">{{expectedReturnDate}} {{expectedReturnTime}}</div>
+        </div>
+        
+        <div class="detail-row">
+          <div class="detail-label">Durasi:</div>
+          <div class="detail-value">{{durationDays}} hari</div>
+        </div>
+      </div>
+
+      <div class="qr-section">
+        <strong>📱 QR Code E-Ticket</strong>
+        <div>QR Code Anda sudah tersedia di aplikasi SIPESA</div>
+        <div class="qr-placeholder">
+          [QR Code akan muncul di aplikasi]
+        </div>
+        <div class="qr-placeholder-text">
+          Tunjukkan QR Code ini saat check-in dan check-out
+        </div>
+      </div>
+
+      <div class="timeline">
+        <div style="font-weight: 600; color: #2c3e50; margin-bottom: 12px; font-size: 15px;">✓ Tahap Persetujuan Selesai:</div>
+        <div class="timeline-item">
+          <div>
+            <div class="timeline-label">Wali Kelas</div>
+            <div class="timeline-desc">Telah menyetujui izin Anda</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div>
+            <div class="timeline-label">Wali Kamar</div>
+            <div class="timeline-desc">Telah menyetujui izin Anda</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="important-notes">
+        <strong>⚠️ Hal Penting yang Perlu Diperhatikan:</strong>
+        <div class="note-item"><strong>Waktu Valid:</strong> Izin hanya berlaku pada tanggal dan waktu yang telah ditentukan</div>
+        <div class="note-item"><strong>Pemindaian QR:</strong> Pastikan QR Code Anda dipindai saat check-out dan check-in</div>
+        <div class="note-item"><strong>Deadline Kembali:</strong> Harus kembali sebelum {{expectedReturnDate}} {{expectedReturnTime}}, atau akan dianggap telat</div>
+        <div class="note-item"><strong>Laporan:</strong> Setelah kembali, wali kamar akan mengkonfirmasi status izin Anda</div>
+      </div>
+
+      <p style="text-align: center; margin-top: 24px;">
+        <a href="{{appUrl}}/permissions/{{permissionId}}" class="button">Lihat Detail & QR Code</a>
+      </p>
+
+      <p style="font-size: 14px; line-height: 1.6; color: #666; margin-top: 20px; text-align: center;">
+        Jika ada pertanyaan atau butuh bantuan, hubungi Wali Kelas atau Wali Kamar Anda.
+      </p>
+
+      <p style="font-size: 13px; text-align: center; color: #999; margin-top: 20px;">
+        Jangan membalas email ini. Email ini adalah notifikasi otomatis dari sistem SIPESA.
+      </p>
+    </div>
+
+    <div class="footer">
+      <div>SIPESA • SMP POMOSDA</div>
+      <div class="footer-divider">•</div>
+      <div>Sistem Informasi Perizinan</div>
+      <div class="timestamp">Dikirim pada: {{sentAt}}</div>
+    </div>
+  </div>
+</body>
+</html>
